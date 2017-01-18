@@ -1,0 +1,19 @@
+@rem ===================================
+@rem разработчик Ежов Д.А.
+@rem GitHub: https://github.com/ezhov-da
+@rem ===================================
+
+@echo off
+
+@rem !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@rem КОДИРОВКА ФАЙЛА ДОЛЖНА БЫТЬ В OEM866
+@rem !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@rem этот BAT файл запускает скрипт, который производит установку указанной в данном файле надстройки
+@rem в этом файле указываются:
+@rem - путь к скрипту. Пример: E:\_own_repository_data\vbs\install_excel_addins\install_excel_addins.vbs
+@rem - путь к надстройке. Пример: X:\Категорийные\Кожанов\
+@rem - название надстройки без расширени. Пример: test_ezhov
+@rem - расширение. Пример: xla
+
+CScript "E:\_own_repository_data\vbs\install_excel_addins\install_excel_addins.vbs" "X:\Категорийные\Кожанов\" "test_ezhov" "xla"
