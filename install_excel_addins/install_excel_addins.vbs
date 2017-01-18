@@ -1,10 +1,10 @@
 '===================================
-'разработчик Ежов Д.А. 
+'СЂР°Р·СЂР°Р±РѕС‚С‡РёРє Р•Р¶РѕРІ Р”.Рђ. 
 'GitHub: https://github.com/ezhov-da
 '===================================
 
 '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-'КОДИРОВКА ФАЙЛА ДОЛЖНА БЫТЬ В ANSI
+'РљРћР”РР РћР’РљРђ Р¤РђР™Р›Рђ Р”РћР›Р–РќРђ Р‘Р«РўР¬ Р’ ANSI
 '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Dim objArgs
@@ -12,22 +12,22 @@ Set objArgs = WScript.Arguments
 
 dim pathToAddins
 pathToAddins = objArgs(0)
-WScript.Echo "Путь к надстройке: " & pathToAddins
+'WScript.Echo "РџСѓС‚СЊ Рє РЅР°РґСЃС‚СЂРѕР№РєРµ: " & pathToAddins
 
 dim nameAddins
 nameAddins = objArgs(1)
-WScript.Echo "Название надстройки: " & nameAddins
+'WScript.Echo "РќР°Р·РІР°РЅРёРµ РЅР°РґСЃС‚СЂРѕР№РєРё: " & nameAddins
 
 dim extensionAddins
 extensionAddins = objArgs(2)
-WScript.Echo "Расширение надстройки: " & extensionAddins
+'WScript.Echo "Р Р°СЃС€РёСЂРµРЅРёРµ РЅР°РґСЃС‚СЂРѕР№РєРё: " & extensionAddins
 
 Dim source
 source = pathToAddins & nameAddins & "." & extensionAddins
-WScript.Echo "Копирование надстройки: " & source
+'WScript.Echo "РљРѕРїРёСЂРѕРІР°РЅРёРµ РЅР°РґСЃС‚СЂРѕР№РєРё: " & source
 
 Dim questionCloseExcel
-questionCloseExcel = MsgBox ("Перед установкой надстройки, необходимо закрыть Excel." & chr(10) & "Excel закрыт?", vbYesNo, "Закрытие Excel")
+questionCloseExcel = MsgBox ("РџРµСЂРµРґ СѓСЃС‚Р°РЅРѕРІРєРѕР№ РЅР°РґСЃС‚СЂРѕР№РєРё, РЅРµРѕР±С…РѕРґРёРјРѕ Р·Р°РєСЂС‹С‚СЊ Excel." & chr(10) & "Excel Р·Р°РєСЂС‹С‚?", vbYesNo, "Р—Р°РєСЂС‹С‚РёРµ Excel")
 Select Case questionCloseExcel
 Case vbYes
 
@@ -36,7 +36,7 @@ Case vbYes
 
 	Dim targetFolder
 	targetFolder = excel.Application.UserLibraryPath
-	WScript.Echo "Место хранения надстроек: " & targetFolder
+	'WScript.Echo "РњРµСЃС‚Рѕ С…СЂР°РЅРµРЅРёСЏ РЅР°РґСЃС‚СЂРѕРµРє: " & targetFolder
 
 	Dim fso
 	Set fso = CreateObject("Scripting.FileSystemObject")
@@ -50,17 +50,17 @@ Case vbYes
 	set excel = nothing
 
 	if Err > 0 then
-		MsgBox "Ошибка : " & Err.Description
+		MsgBox "РћС€РёР±РєР°В : " & Err.Description
 	else
 		dim result
-		result = "Надстройка [" & source & "] установлена."
-		WScript.Echo result
+		result = "РќР°РґСЃС‚СЂРѕР№РєР° [" & source & "] СѓСЃС‚Р°РЅРѕРІР»РµРЅР°."
+		'WScript.Echo result
 		MsgBox result
 	end if
 	
 Case vbNo
 
-    MsgBox "Установка надстройки отменена." & chr(10) & "Закройте Excel и запустите установку надстройки повторно." & chr(10) & "Спасибо."
+    MsgBox "РЈСЃС‚Р°РЅРѕРІРєР° РЅР°РґСЃС‚СЂРѕР№РєРё РѕС‚РјРµРЅРµРЅР°." & chr(10) & "Р—Р°РєСЂРѕР№С‚Рµ Excel Рё Р·Р°РїСѓСЃС‚РёС‚Рµ СѓСЃС‚Р°РЅРѕРІРєСѓ РЅР°РґСЃС‚СЂРѕР№РєРё РїРѕРІС‚РѕСЂРЅРѕ." & chr(10) & "РЎРїР°СЃРёР±Рѕ."
 	
 End Select
 
