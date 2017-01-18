@@ -12,22 +12,31 @@ Set objArgs = WScript.Arguments
 
 dim pathToAddins
 pathToAddins = objArgs(0)
-'WScript.Echo "Путь к надстройке: " & pathToAddins
+WScript.Echo "Путь к надстройке: " & pathToAddins
 
 dim nameAddins
 nameAddins = objArgs(1)
-'WScript.Echo "Название надстройки: " & nameAddins
+WScript.Echo "Название надстройки: " & nameAddins
 
 dim extensionAddins
 extensionAddins = objArgs(2)
-'WScript.Echo "Расширение надстройки: " & extensionAddins
+WScript.Echo "Расширение надстройки: " & extensionAddins
+
+dim isShowMsg
+isShowMsg = objArgs(3)
+WScript.Echo "Показывать сообщения: " & isShowMsg
 
 Dim source
 source = pathToAddins & nameAddins & "." & extensionAddins
-'WScript.Echo "Копирование надстройки: " & source
+WScript.Echo "Копирование надстройки: " & source
 
 Dim questionCloseExcel
-questionCloseExcel = MsgBox ("Перед установкой надстройки, необходимо закрыть Excel." & chr(10) & "Excel закрыт?", vbYesNo, "Закрытие Excel")
+if (isShowMsg = "1") then
+	questionCloseExcel = MsgBox ("Перед установкой надстройки, необходимо закрыть Excel." & chr(10) & "Excel закрыт?", vbYesNo, "Закрытие Excel")
+else
+	questionCloseExcel = vbYes
+end if
+
 Select Case questionCloseExcel
 Case vbYes
 
@@ -36,7 +45,7 @@ Case vbYes
 
 	Dim targetFolder
 	targetFolder = excel.Application.UserLibraryPath
-	'WScript.Echo "Место хранения надстроек: " & targetFolder
+	WScript.Echo "Место хранения надстроек: " & targetFolder
 
 	Dim fso
 	Set fso = CreateObject("Scripting.FileSystemObject")
@@ -50,18 +59,20 @@ Case vbYes
 	set excel = nothing
 
 	if Err > 0 then
-		MsgBox "Ошибка : " & Err.Description
+		if (isShowMsg = "1") then
+			MsgBox "Ошибка : " & Err.Description
+		end if
 	else
 		dim result
 		result = "Надстройка [" & source & "] установлена."
-		'WScript.Echo result
-		MsgBox result
+		WScript.Echo result
+		if (isShowMsg = "1") then
+			MsgBox result
+		end if
 	end if
 	
 Case vbNo
-
-    MsgBox "Установка надстройки отменена." & chr(10) & "Закройте Excel и запустите установку надстройки повторно." & chr(10) & "Спасибо."
-	
+	if (isShowMsg = "1") then
+		MsgBox "Установка надстройки отменена." & chr(10) & "Закройте Excel и запустите установку надстройки повторно." & chr(10) & "Спасибо."
+	end if
 End Select
-
-
