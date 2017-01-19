@@ -18,65 +18,78 @@
 '4. Путь откуда брать новую надстройку: C:\test\
 
 Option Explicit
-
+'on error resume next
 'получаем название надстройки, которую необходимо обновить
 
 dim objArgs
 Set objArgs = WScript.Arguments
 dim nameXLAMForDelete
 nameXLAMForDelete = objArgs(0)
-WScript.Echo "Название надстройки для удаления: " & nameXLAMForDelete
+'WScript.Echo "Название надстройки для удаления: " & nameXLAMForDelete
 
 dim nameAddinsForInstall
 nameAddinsForInstall = objArgs(1)
-WScript.Echo "Название надстройки для установки: " & nameAddinsForInstall
+'WScript.Echo "Название надстройки для установки: " & nameAddinsForInstall
 
 dim extAddinsForInstall
 extAddinsForInstall = objArgs(2)
-WScript.Echo "Расширение надстройки для установки: " & extAddinsForInstall
+'WScript.Echo "Расширение надстройки для установки: " & extAddinsForInstall
 
 dim pathFromCopyNewAddins
 pathFromCopyNewAddins = objArgs(3)
-WScript.Echo "Путь откуда брать новую надстройку: " & pathFromCopyNewAddins
+'WScript.Echo "Путь откуда брать новую надстройку: " & pathFromCopyNewAddins
 
 Dim excel
 set excel  = CreateObject("Excel.Application")    	
 
 Dim targetFolder
 targetFolder = excel.Application.UserLibraryPath
-WScript.Echo "Место хранения надстроек: " & targetFolder
+'WScript.Echo "Место хранения надстроек: " & targetFolder
 
 Dim oFSO: Set oFSO = CreateObject("Scripting.FileSystemObject")
 
-WScript.Echo "Запустили отключение надстроек"
+'WScript.Echo "Запустили отключение надстроек"
 call reconnectAddins(nameXLAMForDelete)
-WScript.Echo "Отключение надстроек завершено"
+'WScript.Echo "Отключение надстроек завершено"
 
 'Удаляем надстройки
-WScript.Echo "Запустили удаление надстроек"
+'WScript.Echo "Запустили удаление надстроек"
 call delFileOnMask(targetFolder, nameXLAMForDelete)
-WScript.Echo "Удаление надстроек завершено"
+'WScript.Echo "Удаление надстроек завершено"
+
+'закрываем excel
+excel.Quit
+set excel = nothing
 
 Dim nameNewAddinsAndExtension
 nameNewAddinsAndExtension = nameAddinsForInstall & "." & extAddinsForInstall
-WScript.Echo "Название новой надстройки с расширением: " & nameNewAddinsAndExtension
+'WScript.Echo "Название новой надстройки с расширением: " & nameNewAddinsAndExtension
 
 Dim fillPathToNewAddins
 fillPathToNewAddins = pathFromCopyNewAddins & nameNewAddinsAndExtension
-WScript.Echo "Полный путь к новой надстройке: " & fillPathToNewAddins
+'WScript.Echo "Полный путь к новой надстройке: " & fillPathToNewAddins
 
 oFSO.CopyFile fillPathToNewAddins, targetFolder
-WScript.Echo "Скопировали надстройку в место хранения"
+'WScript.Echo "Скопировали надстройку в место хранения"
 
-WScript.Echo "Подключаем надстройку..."
+'создаем новый экземпляр excel для подключения
+set excel  = CreateObject("Excel.Application")  
+
+'WScript.Echo "Подключаем надстройку..."
 excel.Application.EnableEvents = False
 excel.Application.AddIns(nameAddinsForInstall).Installed = True
 excel.Application.EnableEvents = False
-WScript.Echo "Надстройка подключена"
+'WScript.Echo "Надстройка подключена"
 
 excel.Quit
 set excel = nothing
 set oFSO = nothing
+
+if Err.Number = 0 then
+	MsgBox "Надстройка обновлена."
+else
+	MsgBox "Ошибка обновления: " & Err.Description
+end if
 
 '==================================================================================================================================
 'Переработали функцию, столкнулись с тем, 
@@ -100,9 +113,8 @@ Function delFileOnMask(s, sMask)
     For i = LBound(arrMask) To UBound(arrMask)
       Set objMatches = objRegExp.Execute(v.name)
       If objMatches.Count > 0 Then
-		WScript.Echo "Надстройка удалена: "& v.name
+		'WScript.Echo "Надстройка удалена: "& v.name
         v.Delete
-        'msgbox v
         Exit For
       End If
     Next
@@ -126,7 +138,7 @@ Function reconnectAddins(nameAddinForReconnect)
 		Set objMatches = objRegExp.Execute(addin.name)
 		If objMatches.Count > 0 Then
 			addin.Installed = False
-			WScript.Echo "Надстройка отключена: "& addin.name
+			'WScript.Echo "Надстройка отключена: "& addin.name
 		End If		
     Next
 End Function
