@@ -10,7 +10,7 @@ Public Sub checkVersion()
     Dim v_addin
     
     For Each v_addin In Application.AddIns
-      If v_addin.name = name Then
+      If LCase(v_addin.Title) = LCase(name) Then
          v_version = True
          'v_addin.Installed = True
       End If
