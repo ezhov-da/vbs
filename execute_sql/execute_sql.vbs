@@ -51,6 +51,7 @@ Dim file 		: file = fileLog
 Dim objFile
 Dim tfile
 
+WScript.Echo "[путь к файлу лога]: " & objFS.GetAbsolutePathName(file)
 if objFS.FileExists(file) then
 		Set tfile = objFS.GetFile(file)
 		'8 - открываем для добавления
@@ -62,7 +63,6 @@ if objFS.FileExists(file) then
 	else
 		Set objFile = objFS.CreateTextFile(file, False)
 end if
-WScript.Echo "[путь к файлу лога]: " & objFS.GetAbsolutePathName(file)
 ' ----------------------------------------------------------------------
 
 call log(" ")
@@ -187,8 +187,6 @@ sub fillDicFiles()
 	next
 end sub
 
-'выполнение запроса из файла,
-'сюда передаем текст файла полностью, внутри происходит парсинг
 sub log(textLog)
 	Dim strLog : strLog = now() & " " & textLog 	
 	Wscript.echo strLog
