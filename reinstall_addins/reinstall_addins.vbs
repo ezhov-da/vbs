@@ -52,14 +52,14 @@ Dim oFSO: Set oFSO = CreateObject("Scripting.FileSystemObject")
 call reconnectAddins(nameXLAMForDelete)
 'WScript.Echo "Отключение надстроек завершено"
 
+'закрываем excel
+excel.Quit
+set excel = nothing
+
 'Удаляем надстройки
 'WScript.Echo "Запустили удаление надстроек"
 call delFileOnMask(targetFolder, nameXLAMForDelete)
 'WScript.Echo "Удаление надстроек завершено"
-
-'закрываем excel
-excel.Quit
-set excel = nothing
 
 Dim nameNewAddinsAndExtension
 nameNewAddinsAndExtension = nameAddinsForInstall & "." & extAddinsForInstall
