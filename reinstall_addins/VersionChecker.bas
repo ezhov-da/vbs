@@ -1,11 +1,23 @@
 Option Explicit
 
+
+Private Const PATH_TO_REINSTALL_VBS As String = "Категорийные\Кожанов\reinstall_addins.vbs"
+Private Const PATH_TO_FOLDER_WITH_ADDINS As String = "Категорийные\Кожанов\"
+
+Private Const WORK_PATH As String = "Категорийные\Кожанов\"
+
+Private Const TXT_FILE_VERSION As String = "e_wassort_version_name_new.txt"
+
+Private Const NAME_ADDIN_FOR_DELETE_WITHOUT_VERSION As String = "PROBLEM-MINQUANTITY"
+
 Public Sub checkVersion()
     Dim v_version  As Boolean
     v_version = False
     
+    
+    Dim path As String: path = getPath()
     Dim name As String
-    name = getNameXLAM()
+    name = getNameXLAM(path)
     
     Dim v_addin
     
@@ -22,14 +34,26 @@ Public Sub checkVersion()
     'Если установлена не та версия:
     If Not v_version Then
         otvet = MsgBox("Текущая версия инструмента устарела. Произвести обновление? Приложение будет закрыто.", vbYesNo, "Обновление")
+             
             If otvet = 6 Then
-                Dim script As String: script = """X:\Категорийные\Кожанов\reinstall_addins.vbs"" "
-                Dim nameAddinForDelete As String: nameAddinForDelete = """INACTIVE"" "
+                Dim pathToReinstallVbs As String: pathToReinstallVbs = path & PATH_TO_REINSTALL_VBS
+                Dim pathToFolderVersion As String: pathToFolderVersion = path & PATH_TO_FOLDER_WITH_ADDINS
+            
+                Dim script As String: script = """" & pathToReinstallVbs & """ "
+                Dim nameAddinForDelete As String: nameAddinForDelete = """" & NAME_ADDIN_FOR_DELETE_WITHOUT_VERSION & """ "
                 Dim nameNewAddins As String: nameNewAddins = """" & name & """ "
                 Dim extNewAddins As String: extNewAddins = """xlam"" "
-                Dim fromNewAddins As String: fromNewAddins = """X:\Категорийные\Кожанов\"""
+                Dim fromNewAddins As String: fromNewAddins = """" & pathToFolderVersion & """"
                 Dim scriptCommand As String
-                scriptCommand = "Wscript.exe  " & script & nameAddinForDelete & nameNewAddins & extNewAddins & fromNewAddins
+                scriptCommand = _
+                    "Wscript.exe  " & _
+                    script & _
+                    nameAddinForDelete & _
+                    nameNewAddins & _
+                    extNewAddins & _
+                    fromNewAddins
+            
+                'Debug.Print scriptCommand
             
                 PROCED = Shell(scriptCommand, vbNormalFocus)
                 Application.DisplayAlerts = False
@@ -40,11 +64,12 @@ Public Sub checkVersion()
     End If
 End Sub
 
-Private Function getNameXLAM() As String
-    Const PATH_TO_FILE_VERSION As String = "X:\Категорийные\Кожанов\e_inactive_version_name.txt"
-    
+Private Function getNameXLAM(path As String) As String
+    Dim pathToFileVersion As String
+    pathToFileVersion = path & WORK_PATH & TXT_FILE_VERSION
+     
     Dim myFile As String
-    myFile = PATH_TO_FILE_VERSION
+    myFile = pathToFileVersion
     Open myFile For Input As #1
     
     Dim text As String
@@ -57,5 +82,28 @@ Private Function getNameXLAM() As String
     
     Close #1
     getNameXLAM = text
+End Function
+
+Private Function getPath() As String
+    'пути для получения файлов
+    Dim pathArr: pathArr = Array("W:\_Departments\", "X:\", "R:\")
+
+    Dim find As String
+
+    Dim i
+    For i = LBound(pathArr) To UBound(pathArr)
+    
+        On Error Resume Next
+    
+        'прибавляем папку, так как именно к ней может не быть доступа
+        find = Dir(pathArr(i) & "Категорийные\", vbDirectory)
+               
+        'а раз нет доступа, значит ошибка
+        'ее и обрабатываем
+        If (err.number = 0 And find <> "") Then
+            getPath = pathArr(i)
+            Exit Function
+        End If
+    Next i
 End Function
 
